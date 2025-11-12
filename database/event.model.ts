@@ -2,8 +2,8 @@
 
 import mongoose, { Document, Model, Schema } from "mongoose";
 
-// TypeScript interface for Event document
-export interface IEvent extends Document {
+// Di file database/index.ts atau types.ts
+export interface IEventBase {
   title: string;
   slug: string;
   description: string;
@@ -21,6 +21,8 @@ export interface IEvent extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IEvent extends Document, IEventBase {}
 
 const EventSchema = new Schema<IEvent>(
   {
