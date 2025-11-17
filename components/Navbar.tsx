@@ -1,9 +1,14 @@
 /** @format */
 
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
+  const pathname = usePathname();
+
   return (
     <header>
       <nav>
@@ -13,9 +18,21 @@ const Navbar = () => {
         </Link>
 
         <ul>
-          <Link href={"/"}>Home</Link>
-          <Link href={"/"}>Events</Link>
-          <Link href={"/"}>Create Event</Link>
+          <Link
+            href={"/"}
+            className={pathname === "/" ? "nav-link-active" : ""}>
+            Home
+          </Link>
+          <Link
+            href="/events"
+            className={pathname === "/events" ? "nav-link-active" : ""}>
+            Events
+          </Link>
+          <Link
+            href="/events/create"
+            className={pathname === "/events/create" ? "nav-link-active" : ""}>
+            Create Event
+          </Link>
         </ul>
       </nav>
     </header>

@@ -272,4 +272,165 @@
       }
     }
   }
+
+  /** Event Management Styles **/
+
+  .event-management {
+    @apply flex flex-col gap-8 w-full;
+  }
+
+  .management-header {
+    @apply flex justify-between items-center mb-8 gap-4 max-sm:flex-col max-sm:items-stretch;
+  }
+
+  .management-title {
+    @apply text-gradient text-5xl font-bold max-sm:text-3xl;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-black font-semibold px-8 py-3.5 rounded-lg transition-all duration-200 whitespace-nowrap max-sm:w-full max-sm:text-center;
+  }
+
+  /* Table Styles */
+  .table-container {
+    @apply w-full overflow-x-auto rounded-xl border border-dark-200 card-shadow max-md:hidden;
+  }
+
+  .event-table {
+    @apply w-full border-collapse bg-dark-100/50;
+
+    thead {
+      @apply bg-dark-200 border-b border-dark-200;
+
+      tr th {
+        @apply text-left py-5 px-6 text-light-100 font-semibold text-sm uppercase tracking-wider first:rounded-tl-xl last:rounded-tr-xl;
+      }
+    }
+
+    tbody {
+      tr {
+        @apply border-b border-dark-200/50 hover:bg-dark-200/30 transition-all duration-200;
+
+        &:last-child {
+          @apply border-b-0;
+        }
+
+        td {
+          @apply py-5 px-6 text-light-100;
+
+          &:first-child {
+            @apply font-medium;
+          }
+        }
+      }
+    }
+  }
+
+  .event-info {
+    @apply flex items-center gap-3;
+  }
+
+  .event-logo {
+    @apply w-10 h-10 rounded-md overflow-hidden flex-shrink-0 border border-dark-200;
+  }
+
+  .event-name {
+    @apply font-semibold text-foreground text-base;
+  }
+
+  .booked-count {
+    @apply text-light-100 font-medium;
+  }
+
+  .action-buttons {
+    @apply flex gap-4 items-center;
+  }
+
+  .btn-edit {
+    @apply text-primary hover:text-primary/80 font-semibold transition-colors duration-200 text-sm uppercase tracking-wide;
+  }
+
+  .btn-delete {
+    @apply text-red-500 hover:text-red-400 font-semibold transition-colors duration-200 cursor-pointer text-sm uppercase tracking-wide;
+  }
+
+  /* Mobile Card View */
+  .mobile-cards {
+    @apply hidden max-md:flex flex-col gap-5;
+  }
+
+  .event-mobile-card {
+    @apply bg-dark-100 border border-dark-200 rounded-xl p-5 card-shadow flex flex-col gap-4;
+  }
+
+  .card-header {
+    @apply border-b border-dark-200/50 pb-4;
+  }
+
+  .card-details {
+    @apply flex flex-col gap-3;
+  }
+
+  .detail-row {
+    @apply flex justify-between items-center gap-4;
+  }
+
+  .detail-label {
+    @apply text-light-200 text-sm font-semibold;
+  }
+
+  .detail-value {
+    @apply text-light-100 text-sm font-medium text-right;
+  }
+
+  .card-actions {
+    @apply flex gap-4 pt-4 border-t border-dark-200/50;
+
+    .btn-edit,
+    .btn-delete {
+      @apply flex-1 text-center py-2.5 rounded-lg border transition-all duration-200;
+    }
+
+    .btn-edit {
+      @apply border-primary text-primary hover:bg-primary hover:text-black font-semibold;
+    }
+
+    .btn-delete {
+      @apply border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-semibold;
+    }
+  }
+
+  /* Loading State */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  /* Empty State */
+  .event-table tbody tr td[colspan] {
+    @apply text-center text-light-200 py-16 text-base;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .event-management {
+      @apply gap-6;
+    }
+
+    .management-header {
+      @apply mb-6;
+    }
+
+    .management-title {
+      @apply text-3xl;
+    }
+
+    .btn-primary {
+      @apply py-3 px-6 text-base;
+    }
+  }
+
+  /* Navbar Active Link */
+  header ul a.nav-link-active {
+    @apply text-primary font-bold;
+  }
 }

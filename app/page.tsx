@@ -1,19 +1,51 @@
 /** @format */
 
+"use client";
+
 import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
+import Pagination from "@/components/Pagination";
 import { IEvent } from "@/database";
-import { cacheLife } from "next/cache";
+import { useEffect, useState } from "react";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const Page = () => {
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const eventsPerPage = 6; // Show 6 events per page (2 rows of 3)
 
-const Page = async () => {
-  "use cache";
+  // Fetch events from API
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/events");
+        const data = await response.json();
 
-  cacheLife("hours");
+        if (data.events) {
+          setEvents(data.events);
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const response = await fetch(`${BASE_URL}/api/events`);
-  const { events } = await response.json();
+    fetchEvents();
+  }, []);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(events.length / eventsPerPage);
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of events section when page changes
+    window.scrollTo({ top: 400, behavior: "smooth" });
+  };
 
   return (
     <section>
@@ -30,15 +62,34 @@ const Page = async () => {
       <div className="mt-20 space-y-7">
         <h3>Featured Events</h3>
 
-        <ul className="events">
-          {events &&
-            events.length > 0 &&
-            events.map((event: IEvent) => (
-              <li key={event.title} className="list-none">
-                <EventCard {...event} />
-              </li>
-            ))}
-        </ul>
+        {loading ? (
+          <div className="flex-center min-h-[400px]">
+            <p className="text-light-100">Loading events...</p>
+          </div>
+        ) : currentEvents.length > 0 ? (
+          <>
+            <ul className="events">
+              {currentEvents.map((event: IEvent) => (
+                <li key={event.slug} className="list-none">
+                  <EventCard {...event} />
+                </li>
+              ))}
+            </ul>
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
+        ) : (
+          <div className="flex-center min-h-[400px]">
+            <p className="text-light-200 text-center">
+              No events available at the moment. Check back soon!
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
