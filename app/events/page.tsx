@@ -19,6 +19,12 @@ const EventManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const eventsPerPage = 10;
 
+  // Notification state
+  const [notification, setNotification] = useState<string | null>(null);
+  const [notificationType, setNotificationType] = useState<"success" | "error">(
+    "success"
+  );
+
   // Fetch events from API
   useEffect(() => {
     const fetchEvents = async () => {
@@ -41,6 +47,13 @@ const EventManagement = () => {
     fetchEvents();
   }, []);
 
+  // Show notification
+  const showNotification = (message: string, type: "success" | "error") => {
+    setNotification(message);
+    setNotificationType(type);
+    setTimeout(() => setNotification(null), 3000);
+  };
+
   // Handle event deletion
   const handleDelete = async (slug: string) => {
     if (!confirm("Are you sure you want to delete this event?")) return;
@@ -51,26 +64,22 @@ const EventManagement = () => {
       });
 
       if (response.ok) {
-        // Filter out deleted event
         const updatedEvents = events.filter((event) => event.slug !== slug);
         setEvents(updatedEvents);
+        setTotalPages(Math.ceil(updatedEvents.length / eventsPerPage));
 
-        // Recalculate total pages
-        const newTotalPages = Math.ceil(updatedEvents.length / eventsPerPage);
-        setTotalPages(newTotalPages);
-
-        // If current page is now empty and not the first page, go back one page
+        const indexOfFirstEvent = (currentPage - 1) * eventsPerPage;
         if (currentPage > 1 && indexOfFirstEvent >= updatedEvents.length) {
           setCurrentPage(currentPage - 1);
         }
 
-        alert("Event deleted successfully");
+        showNotification("Event deleted successfully!", "success");
       } else {
-        alert("Failed to delete event");
+        showNotification("Failed to delete event", "error");
       }
     } catch (error) {
       console.error("Error deleting event:", error);
-      alert("An error occurred while deleting the event");
+      showNotification("An error occurred while deleting the event", "error");
     }
   };
 
@@ -95,6 +104,16 @@ const EventManagement = () => {
 
   return (
     <section className="event-management">
+      {/* Simple Notification */}
+      {notification && (
+        <div
+          className={`fixed top-6 right-6 z-50 px-6 py-3 rounded-lg shadow-lg ${
+            notificationType === "success" ? "bg-green-500" : "bg-red-500"
+          } text-white font-semibold`}>
+          {notification}
+        </div>
+      )}
+
       {/* Header */}
       <div className="management-header">
         <h1 className="management-title">Event Management</h1>
