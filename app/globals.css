@@ -433,4 +433,95 @@
   header ul a.nav-link-active {
     @apply text-primary font-bold;
   }
+
+  /** Form Component Styles **/
+  .event-form {
+    @apply bg-dark-100 border border-dark-200 rounded-xl p-8 card-shadow max-w-5xl mx-auto max-sm:p-5;
+  }
+
+  .form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+
+  .form-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .form-label {
+    @apply text-light-100 font-semibold text-sm tracking-wide;
+  }
+
+  .form-input {
+    @apply bg-dark-200 border border-dark-200 text-light-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 placeholder:text-light-200/50;
+  }
+
+  .form-input:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .form-error {
+    @apply text-red-500 text-sm font-medium mt-1;
+  }
+
+  .btn-secondary {
+    @apply bg-dark-200 hover:bg-dark-200/80 text-light-100 font-semibold px-8 py-3.5 rounded-lg transition-all duration-200 border border-dark-200 whitespace-nowrap max-sm:w-full max-sm:text-center;
+  }
+
+  /* Tag/Chip Styles */
+  .tag-chip {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 bg-primary/20 border border-primary/30 rounded-full text-sm text-primary font-medium;
+  }
+
+  .tag-chip button {
+    @apply text-primary hover:text-primary/70 font-bold text-lg leading-none transition-colors duration-200;
+  }
+
+  /* Image Preview */
+  .image-preview-container {
+    @apply relative w-full h-64 rounded-lg overflow-hidden border-2 border-dashed border-dark-200 bg-dark-200/30 flex items-center justify-center;
+  }
+
+  .image-preview-container.has-image {
+    @apply border-solid border-primary/30;
+  }
+
+  .image-upload-placeholder {
+    @apply flex flex-col items-center gap-3 text-center;
+  }
+
+  .image-upload-placeholder svg {
+    @apply w-12 h-12 text-light-200;
+  }
+
+  .image-upload-placeholder p {
+    @apply text-light-200 text-sm;
+  }
+
+  /* Notification Toast */
+  .notification-toast {
+    @apply fixed top-4 right-4 z-50 p-4 rounded-lg shadow-2xl border max-w-md;
+  }
+
+  .notification-toast.success {
+    @apply bg-green-500 text-white border-green-600;
+  }
+
+  .notification-toast.error {
+    @apply bg-red-500 text-white border-red-600;
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out;
+  }
 }
