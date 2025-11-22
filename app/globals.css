@@ -331,7 +331,7 @@
   }
 
   .event-logo {
-    @apply w-10 h-10 rounded-md overflow-hidden flex-shrink-0 border border-dark-200;
+    @apply rounded-md overflow-hidden flex-shrink-0 border border-dark-200;
   }
 
   .event-name {

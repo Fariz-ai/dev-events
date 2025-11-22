@@ -147,7 +147,6 @@ const EventManagement = () => {
                           alt={event.title}
                           width={40}
                           height={40}
-                          className="rounded-md object-cover"
                         />
                       </div>
                       <span className="event-name">{event.title}</span>
