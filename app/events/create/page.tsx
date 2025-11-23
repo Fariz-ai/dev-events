@@ -54,6 +54,7 @@ const CreateEventPage = () => {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [minDate, setMinDate] = useState<string>("");
 
   // Handle input changes
   const handleInputChange = (
@@ -284,6 +285,11 @@ const CreateEventPage = () => {
     }
   }, [notification]);
 
+  // Set minimum date on client side
+  useEffect(() => {
+    setMinDate(new Date().toISOString().split("T")[0]);
+  }, []);
+
   return (
     <section className="event-management">
       {/* Notification Toast */}
@@ -337,7 +343,7 @@ const CreateEventPage = () => {
               value={formData.date}
               onChange={handleInputChange}
               className="form-input"
-              min={new Date().toISOString().split("T")[0]}
+              min={minDate}
             />
             {errors.date && <p className="form-error">{errors.date}</p>}
           </div>
