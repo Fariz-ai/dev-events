@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import { Schibsted_Grotesk, Martian_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import LightRays from "@/components/LightRays";
 import Navbar from "@/components/Navbar";
@@ -21,6 +22,24 @@ export const metadata: Metadata = {
   description: "The Hub for Every Dev Event You Mustn't Miss",
 };
 
+function NavbarSkeleton() {
+  return (
+    <header>
+      <nav>
+        <div className="logo">
+          <div className="w-6 h-6 bg-gray-200 animate-pulse rounded" />
+          <p>DevEvent</p>
+        </div>
+        <ul>
+          <span>Home</span>
+          <span>Events</span>
+          <span>Create Event</span>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +49,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}>
-        <Navbar />
+        <Suspense fallback={<NavbarSkeleton />}>
+          <Navbar />
+        </Suspense>
         <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
           <LightRays
             raysOrigin="top-center-offset"
