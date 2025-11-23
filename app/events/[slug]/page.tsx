@@ -1,197 +1,30 @@
 /** @format */
 
-import BookEvent from "@/components/BookEvent";
-import EventCard from "@/components/EventCard";
-import { getSimilarEventBySlug } from "@/lib/actions/event.actions";
-import { cacheLife } from "next/cache";
-import Image from "next/image";
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import EventDetail from "@/components/EventDetail";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
-const EventDetailItem = ({
-  icon,
-  alt,
-  label,
-}: {
-  icon: string;
-  alt: string;
-  label: string;
-}) => (
-  <div className="flex flex-row gap-2 items-center">
-    <Image src={icon} alt={alt} width={17} height={17} />
-    <p>{label}</p>
-  </div>
-);
-
-const EventAgenda = ({ agendaItems }: { agendaItems: string[] }) => (
-  <div className="agenda">
-    <h2>Agenda</h2>
-    <ul>
-      {agendaItems.map((item, index) => (
-        <li key={index}>{item}</li>
-      ))}
-    </ul>
-  </div>
-);
-
-const EventTags = ({ tags }: { tags: string[] }) => (
-  <div className="flex flex-row gap-1.5 flex-wrap">
-    {tags.map((tag, index) => (
-      <div className="pill" key={index}>
-        {tag}
-      </div>
-    ))}
-  </div>
-);
-
-const EventDetailPage = async ({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) => {
-  "use cache";
-
-  cacheLife("hours");
-
-  const { slug } = await params;
-
-  const request = await fetch(`${BASE_URL}/api/events/${slug}`, {
-    cache: "no-store",
-  });
-
-  if (!request.ok) {
-    console.error("Request failed:", request.status, request.statusText);
-    notFound();
-  }
-
-  const response = await request.json();
-
-  const event = response.event;
-
-  if (!response || !response.event) {
-    console.error("No event data in response");
-    notFound();
-  }
-
-  const {
-    description,
-    image,
-    overview,
-    date,
-    time,
-    location,
-    venue,
-    mode,
-    agenda,
-    audience,
-    tags,
-    organizer,
-  } = response.event;
-
-  if (!response.event) {
-    notFound();
-  }
-
-  const bookings = 10;
-
-  const similarEvents = await getSimilarEventBySlug(slug);
-
+function EventDetailLoadingSkeleton() {
   return (
     <section id="event">
       <div className="header">
-        <h1>Event Description</h1>
-        <p>{description || "No description available"}</p>
+        <div className="h-8 w-64 bg-dark-200 animate-pulse rounded" />
+        <div className="h-20 w-full bg-dark-200 animate-pulse rounded mt-4" />
       </div>
-
-      <div className="details">
-        {/* Left Side - Event Content */}
-        <div className="content">
-          <Image
-            src={image || "/placeholder.jpg"}
-            alt="Event Banner"
-            width={800}
-            height={800}
-            className="banner"
-          />
-
-          <section className="flex flex-col gap-2">
-            <h2>Overview</h2>
-            <p>{overview || "No overview available"}</p>
-          </section>
-
-          <section className="flex flex-col gap-2">
-            <h2>Event Details</h2>
-            <EventDetailItem
-              icon="/icons/calendar.svg"
-              alt="calendar"
-              label={date || "TBA"}
-            />
-            <EventDetailItem
-              icon="/icons/clock.svg"
-              alt="clock"
-              label={time || "TBA"}
-            />
-            <EventDetailItem
-              icon="/icons/pin.svg"
-              alt="pin"
-              label={venue ? `${venue}, ${location}` : location || "TBA"}
-            />
-            <EventDetailItem
-              icon="/icons/mode.svg"
-              alt="mode"
-              label={
-                mode ? mode.charAt(0).toUpperCase() + mode.slice(1) : "TBA"
-              }
-            />
-            <EventDetailItem
-              icon="/icons/audience.svg"
-              alt="audience"
-              label={audience || "Everyone"}
-            />
-          </section>
-
-          {agenda && agenda.length > 0 && <EventAgenda agendaItems={agenda} />}
-
-          <section className="flex flex-col gap-2">
-            <h2>About the Organizer</h2>
-            <p>{organizer || "No organizer information available"}</p>
-          </section>
-
-          {tags && tags.length > 0 && <EventTags tags={tags} />}
-        </div>
-
-        {/* Right Side - Booking Form */}
-        <aside className="booking">
-          <div className="signup-card">
-            <h2>Book Your Spot</h2>
-            {bookings > 0 ? (
-              <p className="text-sm">
-                Join {bookings} people who have already booked their spot!
-              </p>
-            ) : (
-              <p className="text-sm">Be the first to book your spot!</p>
-            )}
-
-            <BookEvent eventId={event._id} slug={event.slug} />
-          </div>
-        </aside>
-      </div>
-
-      <div className="flex w-full flex-col gap-4 pt-20">
-        <h2>Similar Events</h2>
-        <div className="events">
-          {similarEvents.length > 0 ? (
-            similarEvents.map((similarEvent) => (
-              <EventCard key={similarEvent.title} {...similarEvent} />
-            ))
-          ) : (
-            <p className="text-gray-500">No similar events found</p>
-          )}
-        </div>
+      <div className="flex-center min-h-[60vh]">
+        <p className="text-light-100 text-lg">Loading event details...</p>
       </div>
     </section>
   );
-};
+}
 
-export default EventDetailPage;
+export default function EventDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  return (
+    <Suspense fallback={<EventDetailLoadingSkeleton />}>
+      <EventDetail params={params} />
+    </Suspense>
+  );
+}
